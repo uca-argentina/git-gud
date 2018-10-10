@@ -38,8 +38,3 @@ Player >> setPosition: anInteger [
 Player >> throws: aDice [ 
 	position:= self position+ (aDice throw).
 ]
-
-{ #category : #actions }
-Player >> throws: aDeterministicDice to: anInteger [
-	position:= self position+ (aDeterministicDice throw: anInteger).
-]

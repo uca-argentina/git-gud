@@ -69,15 +69,12 @@ AssertionFailure signal: 'No se puede dar la posición final en la mitad del jue
 ]
 
 { #category : #accesing }
-Game >> positionOf: aPlayer [ 
-	players do:[:each | 
-		(aPlayer=each)
-		ifTrue: [^(each position)]].
-	
-	AssertionFailure signal:'No existe el jugador solicitado'.
-	
-	
-	
+Game >> positionOf: aPlayer [
+	players
+		do: [ :each | 
+			aPlayer = each
+				ifTrue: [ ^ each position ] ].
+	AssertionFailure signal: 'No existe el jugador solicitado'
 ]
 
 { #category : #actions }
@@ -90,21 +87,21 @@ Game >> turnOfWhenGameHasEnded:aPlayer [
 	AssertionFailure signal: 'El juego ya termino'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Game >> turnOfWhenGameIsBeingPlayed: aPlayer [
-|numberOfPlayers|
+	| numberOfPlayers |
 	(players at: turn) = aPlayer
-				ifTrue: [ "Si le toca a ese jugador"
-					dices
-						do:
-							[ :each | (players at: turn) throws: each	"El jugador del turno tira cada dado" ].
-					self hasEnded
-						ifTrue: [ 	(players at: turn) setPosition: numberOfTiles ].	"Si se paso del maximo su posción final es la última del tablero"
-					numberOfPlayers := players size.	"Tamaño del arreglo de jugadores"
-					turn + 1 > numberOfPlayers
-						ifTrue: [ turn := 1 ]
-						ifFalse: [ turn := turn + 1 ]	"Para que si ya tiraron todos vuelva a empezar" ]
-				ifFalse: [ AssertionFailure signal: 'No es el turno de ese jugador' ]	"Revisa que el jugador que mandan es al que le toca"
+		ifTrue: [ "Si le toca a ese jugador"
+			dices
+				do:
+					[ :each | (players at: turn) throws: each	"El jugador del turno tira cada dado" ].
+			self hasEnded
+				ifTrue: [ (players at: turn) setPosition: numberOfTiles ].	"Si se paso del maximo su posción final es la última del tablero"
+			numberOfPlayers := players size.	"Tamaño del arreglo de jugadores"
+			turn := turn + 1 > numberOfPlayers
+				ifTrue: [ 1 ]
+				ifFalse: [ turn + 1 ]	"Para que si ya tiraron todos vuelva a empezar" ]
+		ifFalse: [ "Revisa que el jugador que mandan es al que le toca" AssertionFailure signal: 'No es el turno de ese jugador' ]
 ]
 
 { #category : #accesing }

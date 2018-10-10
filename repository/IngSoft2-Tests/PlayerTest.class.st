@@ -14,9 +14,9 @@ self assert: player position equals: 0.
 
 { #category : #tests }
 PlayerTest >> testPlayerThrowsDiceAndShowPosition [
-	|player dice|
-	player:= Player named: 'Maria'.
-	dice:= Dice withType: (DeterministicDice new) withQuantityOfSides: 6.
+	| player dice |
+	player := Player named: 'Maria'.
+	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 2 3 4 5)) withSides: 6.
 	player throws: dice.
-	self assert: (player position)equals: 5.       
+	self assert: player position equals: 5
 ]

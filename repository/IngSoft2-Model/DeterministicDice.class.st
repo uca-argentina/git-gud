@@ -2,36 +2,29 @@ Class {
 	#name : #DeterministicDice,
 	#superclass : #Object,
 	#instVars : [
-		'QuantityOfSides'
+		'QuantityOfSides',
+		'futureThrows',
+		'nextThrow'
 	],
 	#category : #'IngSoft2-Model'
 }
 
-{ #category : #asserting }
-DeterministicDice class >> assertQuantityOfSidesGreaterThanZero: anInteger [
-	(anInteger <0)
-	ifTrue: [ AssertionFailure signal:'The quantity of sides must be greater than zero' ].
+{ #category : #initialization }
+DeterministicDice class >> withFutureThrows: aThrowsArray [
+^self new initializeWithFutureThrows: aThrowsArray.
+	
 ]
 
 { #category : #initialization }
-DeterministicDice class >> withQuantityOfSides: anInteger [ 
+DeterministicDice >> initializeWithFutureThrows: aThrowsArray [
+futureThrows :=aThrowsArray.
+nextThrow:=0.
 
- self assertQuantityOfSidesGreaterThanZero: anInteger.
-	^self new initializeWithQuantityOfSides: anInteger.
-]
-
-{ #category : #accessing }
-DeterministicDice >> QuantityOfSides [
-	^QuantityOfSides 
-]
-
-{ #category : #initialization }
-DeterministicDice >> initializeWithQuantityOfSides: anInteger [ 
-	QuantityOfSides:= anInteger.
 ]
 
 { #category : #actions }
 DeterministicDice >> throw: aDice [
-^aDice throwWhenSecuential.
-	
+	futureThrows := futureThrows select: [ :number | number < (aDice quantityOfSides + 1) & (number > 0) ].	"Me quedo solo con los valores que esten entre 1 y quantity of sides "
+	nextThrow := nextThrow + 1.
+	^ futureThrows at: nextThrow.
 ]
