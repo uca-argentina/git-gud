@@ -6,7 +6,8 @@ Class {
 
 { #category : #actions }
 RandomDice >> throw: aDice [
-aDice throwWhenRandom.
-	
-	
+	| aRandomSeries aRandomInt |
+	aRandomSeries := Random new.
+	aRandomInt := aRandomSeries nextInt: aDice quantityOfSides.
+	^ aRandomInt.
 ]

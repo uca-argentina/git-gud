@@ -5,22 +5,27 @@ Class {
 }
 
 { #category : #tests }
-DiceTest >> testDiceShouldRaiseExceptionWithNegativeQuantity [
+DiceTest >> testDiceCreation [
 	|dice|
-	self should: [dice:=Dice withType:(DeterministicDice new) withQuantityOfSides: -6.] raise: AssertionFailure .
-
+	dice:=Dice withType: (RandomDice new) withSides: 6.
+	self assert: dice quantityOfSides equals: 6.
 ]
 
 { #category : #tests }
-DiceTest >> testDiceWasCreated [
-	|dice|
-	dice:=Dice withType: (RandomDice new) withQuantityOfSides: 6.
-	self assert: dice QuantityOfSides equals: 6.
+DiceTest >> testDiceShouldFailWithNegativeQuantity [
+	self should: [ Dice withType: DeterministicDice new withSides: -6 ] raise: AssertionFailure withExceptionDo: [  :signal | self assert: signal messageText equals: 'The quantity of sides must be greater than zero' ]
 ]
 
 { #category : #tests }
-DiceTest >> testThrowReturnsColaboratorInDeterministicDice [
-	|dice|
-	dice:= Dice withType:  (DeterministicDice new) withQuantityOfSides: 6.
-	self assert: (dice throw) equals: 5.
+DiceTest >> testThrowDeterministicDice [
+	| dice |
+	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 2 3 4 5)) withSides: 6.
+	self assert: dice throw equals: 5
+]
+
+{ #category : #tests }
+DiceTest >> testThrowRandomDice [
+	| dice |
+	dice := Dice withType: RandomDice new withSides: 6.
+	self assert: ((dice throw) between: 1 and: 6)
 ]

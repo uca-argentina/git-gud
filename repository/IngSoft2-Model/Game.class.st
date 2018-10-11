@@ -23,61 +23,59 @@ Game class >> playedBy: aPlayerArray throwing: aDiceArray onABoardWithNumberOfTi
 	 ^self new initializeWithPlayers: aPlayerArray  withDices: aDiceArray withBoard: aBoard.
 ]
 
-{ #category : #accesing }
+{ #category : #'as yet unclassified' }
+Game >> UpdateGameState [
+stateOfGame := GameEnded new.
+]
+
+{ #category : #'as yet unclassified' }
+Game >> advanceTurn [
+	turn := turn + 1 > players size
+				ifTrue: [ 1 ]
+				ifFalse: [ "Para que si ya tiraron todos vuelva a empezar" turn + 1 ] 
+]
+
+{ #category : #asserting }
+Game >> assertCanPlay: aPlayer [
+	^ (players at: turn) = aPlayer
+	ifFalse:[AssertionFailure signal: 'No es el turno del jugador'].
+]
+
+{ #category : #testing }
 Game >> hasEnded [
-	players
-		do: [ :each | 
-			each position >= numberOfTiles
-				ifTrue: [ 
-					stateOfGame :=GameEnded new.
-					^ true.
-					] ].
-	^ false
+	^stateOfGame hasEnded.
 ]
 
 { #category : #initialization }
-Game >> initializeWithPlayers: aPlayersArray withDices: aDiceArray withBoard: aBoard [ 
-	players:=aPlayersArray.
-	dices:=aDiceArray.
-	numberOfTiles:=aBoard.
-	turn:=1.
-	stateOfGame:=GamePlaying new.
-	
+Game >> initializeWithPlayers: aGroupOfPlayers withDices: aGroupOfDices withBoard: aBoard [
+	players := aGroupOfPlayers.
+	dices := aGroupOfDices.
+	numberOfTiles := aBoard.
+	turn := 1.
+	stateOfGame := GamePlaying new
 ]
 
 { #category : #accesing }
-Game >> placeOf: aPlayer [ 
-	^(stateOfGame placeOf: aPlayer withGame: self).
+Game >> placeOf: aPlayer [
+	| orderedPlayers |
+	orderedPlayers := players.
+	^ (orderedPlayers sort: #position descending) detectIndex: [:each| each=aPlayer] ifNone: [ AssertionFailure signal: 'No existe el jugador' ]
+]
+
+{ #category : #accessing }
+Game >> playTurnFor: aPlayer [
+	dices do: [ :each | aPlayer throws: each ].
+	aPlayer position >= numberOfTiles
+		ifTrue:[
+	aPlayer setPosition: numberOfTiles.
+	self UpdateGameState.].
 ]
 
 { #category : #accesing }
-Game >> placeOfWhenGameHasEnded:aPlayer [
-	players sort: [:player1 :player2 | player1 position >=player2 position].
-		players doWithIndex: [ :each :i|
-			(each = aPlayer)
-			ifTrue: [ ^i. ]
-			
-			 ].
-		AssertionFailure signal: 'No existe el jugador'.
-]
-
-{ #category : #accesing }
-Game >> placeOfWhenGameIsBeingPlayed: aPlayer [
-AssertionFailure signal: 'No se puede dar la posición final en la mitad del juego'
-
-
-]
-
-{ #category : #accesing }
-Game >> positionOf: aPlayer [ 
-	players do:[:each | 
-		(aPlayer=each)
-		ifTrue: [^(each position)]].
-	
-	AssertionFailure signal:'No existe el jugador solicitado'.
-	
-	
-	
+Game >> positionOf: aPlayer [
+	(players includes: aPlayer)
+		ifTrue: [ ^ aPlayer position ]
+		ifFalse: [ AssertionFailure signal: 'No existe el jugador solicitado' ].
 ]
 
 { #category : #actions }
@@ -90,35 +88,25 @@ Game >> turnOfWhenGameHasEnded:aPlayer [
 	AssertionFailure signal: 'El juego ya termino'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Game >> turnOfWhenGameIsBeingPlayed: aPlayer [
-|numberOfPlayers|
-	(players at: turn) = aPlayer
-				ifTrue: [ "Si le toca a ese jugador"
-					dices
-						do:
-							[ :each | (players at: turn) throws: each	"El jugador del turno tira cada dado" ].
-					self hasEnded
-						ifTrue: [ 	(players at: turn) setPosition: numberOfTiles ].	"Si se paso del maximo su posción final es la última del tablero"
-					numberOfPlayers := players size.	"Tamaño del arreglo de jugadores"
-					turn + 1 > numberOfPlayers
-						ifTrue: [ turn := 1 ]
-						ifFalse: [ turn := turn + 1 ]	"Para que si ya tiraron todos vuelva a empezar" ]
-				ifFalse: [ AssertionFailure signal: 'No es el turno de ese jugador' ]	"Revisa que el jugador que mandan es al que le toca"
+	
+	self assertCanPlay: aPlayer.
+	self playTurnFor: aPlayer.
+	self advanceTurn
+]
+
+{ #category : #'as yet unclassified' }
+Game >> whenGameHasEndedWonBy: aPlayer [
+	^((self placeOf: aPlayer )=1)
+]
+
+{ #category : #'as yet unclassified' }
+Game >> whenGameIsBeingPlayedwonBy: aPlayer [
+^AssertionFailure signal: 'El juego no terminó todavia'.
 ]
 
 { #category : #accesing }
-Game >> wonBy: aPlayer [ 
-	players do:[:each | 
-		(aPlayer=each)
-		ifTrue: [
-		
-			(each position=numberOfTiles )
-			ifTrue: [ ^true ]
-			ifFalse: [ ^false ]
-			]
-		
-			].
-	
-	AssertionFailure signal:'No existe el jugador solicitado'.
+Game >> wonBy: aPlayer [
+	^stateOfGame wonBy: aPlayer withGame: self.
 ]

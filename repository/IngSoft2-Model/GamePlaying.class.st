@@ -4,12 +4,17 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
-GamePlaying >> placeOf: aPlayer withGame: aGame [
-^aGame placeOfWhenGameIsBeingPlayed: aPlayer.
+{ #category : #testing }
+GamePlaying >> hasEnded [
+^false.
 ]
 
 { #category : #'as yet unclassified' }
 GamePlaying >> turnOf: aPlayer withGame: aGame [
 aGame turnOfWhenGameIsBeingPlayed: aPlayer.
+]
+
+{ #category : #'as yet unclassified' }
+GamePlaying >> wonBy: aPlayer withGame: aGame [
+	^ aGame whenGameIsBeingPlayedwonBy: aPlayer
 ]
