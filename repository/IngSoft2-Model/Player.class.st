@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'position'
+		'position',
+		'lap'
 	],
 	#category : #'IngSoft2-Model'
 }
@@ -14,9 +15,21 @@ Player class >> named: aString [
 ]
 
 { #category : #initialization }
-Player >> initializeWithName: aString [ 
-	name:=aString.
-	position:=0.
+Player >> initializeWithName: aString [
+	name := aString.
+	position := 1
+]
+
+{ #category : #'as yet unclassified' }
+Player >> moveBackwards: anAmount [
+	position := position - anAmount.
+	
+]
+
+{ #category : #'as yet unclassified' }
+Player >> moveForward: anAmount [
+	position := position + anAmount.
+	
 ]
 
 { #category : #accessing }
@@ -35,6 +48,6 @@ Player >> setPosition: anInteger [
 ]
 
 { #category : #actions }
-Player >> throws: aDice [ 
-	position:= self position+ (aDice throw).
+Player >> throws: aDice [
+	self moveForward:aDice throw
 ]

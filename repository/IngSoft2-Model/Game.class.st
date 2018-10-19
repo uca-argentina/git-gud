@@ -5,8 +5,8 @@ Class {
 		'players',
 		'dices',
 		'turn',
-		'numberOfTiles',
-		'stateOfGame'
+		'stateOfGame',
+		'board'
 	],
 	#category : #'IngSoft2-Model'
 }
@@ -18,17 +18,38 @@ Game class >> assertNumberOfTilesGreaterThanZero: anInteger [
 ]
 
 { #category : #initialization }
-Game class >> playedBy: aPlayerArray throwing: aDiceArray onABoardWithNumberOfTiles: aBoard [
-	self assertNumberOfTilesGreaterThanZero: aBoard. 
-	 ^self new initializeWithPlayers: aPlayerArray  withDices: aDiceArray withBoard: aBoard.
+Game class >> playedBy: aPlayerArray throwing: aDiceArray onABoard: aBoard [
+	self assertNumberOfTilesGreaterThanZero: (aBoard tiles) size.
+	^ self new initializeWithPlayers: aPlayerArray withDices: aDiceArray withBoard: aBoard
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 Game >> UpdateGameState [
 stateOfGame := GameEnded new.
 ]
 
 { #category : #'as yet unclassified' }
+Game >> activateAtomicBomb [
+	players do: [ :each | each moveBackwards: (each position - 1) ]
+]
+
+{ #category : #'as yet unclassified' }
+Game >> activateMoonWalkWithAmount: backwardValue [
+	players do:[:each| each moveBackwards: backwardValue].
+	(players at: turn)  moveForward: backwardValue.
+]
+
+{ #category : #actions }
+Game >> activateSpeedUp [
+	(players at: turn) moveForward: 4
+]
+
+{ #category : #actions }
+Game >> activateWormHole [
+(players at: turn) moveBackwards: 4.
+]
+
+{ #category : #actions }
 Game >> advanceTurn [
 	turn := turn + 1 > players size
 				ifTrue: [ 1 ]
@@ -50,7 +71,7 @@ Game >> hasEnded [
 Game >> initializeWithPlayers: aGroupOfPlayers withDices: aGroupOfDices withBoard: aBoard [
 	players := aGroupOfPlayers.
 	dices := aGroupOfDices.
-	numberOfTiles := aBoard.
+	board := aBoard.
 	turn := 1.
 	stateOfGame := GamePlaying new
 ]
@@ -65,10 +86,10 @@ Game >> placeOf: aPlayer [
 { #category : #accessing }
 Game >> playTurnFor: aPlayer [
 	dices do: [ :each | aPlayer throws: each ].
-	aPlayer position >= numberOfTiles
-		ifTrue:[
-	aPlayer setPosition: numberOfTiles.
-	self UpdateGameState.].
+	(board tiles at: aPlayer position) activateEffectforGame: self.
+	aPlayer position >= board tiles size
+		ifTrue: [ aPlayer setPosition: board tiles size.
+			self UpdateGameState ]
 ]
 
 { #category : #accesing }

@@ -8,18 +8,20 @@ Class {
 }
 
 { #category : #initialization }
-Board class >> withGenerator: aBoardGenerator withTiles: aNumberOfTiles [ 
-	^self new initializeWithGenerator: aBoardGenerator WithTiles: aNumberOfTiles 
+Board class >> withGenerator: aTileGenerator withTiles: aNumberOfTiles [
+	^ self new initializeWithGenerator: aTileGenerator WithTiles: aNumberOfTiles
 ]
 
 { #category : #initialization }
-Board >> initializeWithGenerator: aBoardGenerator WithTiles: aNumberOfTiles [ 
+Board >> initializeWithGenerator: aTileGenerator WithTiles: aNumberOfTiles [
+
+	tiles := (1 to: aNumberOfTiles) collect: [ :each | aTileGenerator generateTile ].
 	
-	tiles:=aBoardGenerator generateBoard: aNumberOfTiles.
 	"aGroupOfTiles :=Array  new: aNumberOfTiles.
 	1 to: aNumberOfTiles do:[
 		:each | aGroupOfTiles at:  (Tile createTile).
 		].
+	
 	tiles:=aGroupOfTiles ."
 ]
 
