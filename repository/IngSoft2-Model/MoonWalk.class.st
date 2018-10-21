@@ -12,7 +12,7 @@ MoonWalk class >> withValue: anInteger [
 ^self new initializeWithValue: anInteger.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 MoonWalk >> activateEffectforGame: aGame [
 	aGame activateMoonWalkWithAmount: backwardValue .
 ]

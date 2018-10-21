@@ -4,7 +4,7 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 BoardGenerator >> generateBoard: aNumberOfTiles [
 	| aRandomSeries aRandomInt aGroupOfTiles aTileGenerator |
 	aTileGenerator := RandomTileGenerator new.
