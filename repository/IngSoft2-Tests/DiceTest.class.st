@@ -17,6 +17,13 @@ DiceTest >> testDiceShouldFailWithNegativeQuantity [
 ]
 
 { #category : #tests }
+DiceTest >> testDiceWontThrowInvalidValue [
+| dice |
+	dice := Dice withType: (DeterministicDice withFutureThrows: #(7 1 2 3 4 5)) withSides: 6.
+	self assert: dice throw equals: 1.
+]
+
+{ #category : #tests }
 DiceTest >> testThrowDeterministicDice [
 	| dice |
 	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 2 3 4 5)) withSides: 6.

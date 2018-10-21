@@ -9,12 +9,12 @@ GamePlaying >> hasEnded [
 ^false.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 GamePlaying >> turnOf: aPlayer withGame: aGame [
 aGame turnOfWhenGameIsBeingPlayed: aPlayer.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 GamePlaying >> wonBy: aPlayer withGame: aGame [
 	^ aGame whenGameIsBeingPlayedwonBy: aPlayer
 ]

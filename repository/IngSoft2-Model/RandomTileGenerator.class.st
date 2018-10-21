@@ -6,7 +6,7 @@ Class {
 
 { #category : #actions }
 RandomTileGenerator >> generateTile [
-| aRandomSeries aRandomInt  |
+| aRandomSeries aRandomInt anotherRandomInt|
 	
 	aRandomSeries := Random new.
 	aRandomInt := aRandomSeries nextInt: 100.
@@ -18,7 +18,9 @@ RandomTileGenerator >> generateTile [
 	aRandomInt > 68 & (aRandomInt < 89)
 		ifTrue: [ ^ SpeedUp new ].
 	aRandomInt > 88 & (aRandomInt < 99)
-		ifTrue: [ ^ MoonWalk new ].
+		ifTrue: [ 
+			anotherRandomInt:=aRandomSeries nextInt: 5.
+			^ (MoonWalk withValue: anotherRandomInt) ].
 	aRandomInt > 98 & (aRandomInt < 101)
 		ifTrue: [ ^ AtomicBomb new ]
 ]

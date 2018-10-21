@@ -9,12 +9,12 @@ GameEnded >> hasEnded [
 ^true.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 GameEnded >> turnOf: aPlayer withGame: aGame [
 aGame turnOfWhenGameHasEnded: aPlayer.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 GameEnded >> wonBy: aPlayer withGame: aGame [
 	^ aGame whenGameHasEndedWonBy: aPlayer
 ]
