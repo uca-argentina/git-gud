@@ -44,7 +44,7 @@ Game >> activateMoonWalkWithAmount: backwardValue [
 	self players do: [:each|
 		self changePositionOf: each  by: backwardValue negated .
 		].
-	self changePositionOf: (players at: turn)  by: backwardValue.
+	self changePositionOf: (self players at: turn)  by: backwardValue.
 	
 ]
 
@@ -91,7 +91,7 @@ Game >> initializeWithPlayers: aGroupOfPlayers withDices: aGroupOfDices withBoar
 	stateOfGame := GamePlaying new.
 	positions:= Dictionary new.
 	laps:= Dictionary new.
-	players:=aGroupOfPlayers.
+	
 	aGroupOfPlayers do:[:each| positions at: each put: 1].
 	aGroupOfPlayers do:[:each| laps at: each put: 0].
 	winningLap:= aNumberOfLaps.
