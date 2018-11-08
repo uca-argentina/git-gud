@@ -15,13 +15,13 @@ Dice class >> assertValidNumberOfSides: anInteger [
 ]
 
 { #category : #initialization }
-Dice class >> withType: aType withSides: anNumberOfSides [
+Dice class >> of: aType withSides: anNumberOfSides [
 	self assertValidNumberOfSides: anNumberOfSides.
-	^ self new initializeWithType: aType WithSides: anNumberOfSides
+	^ self new initializeAs: aType OfSides: anNumberOfSides
 ]
 
 { #category : #initialization }
-Dice >> initializeWithType: aType WithSides: aNumberOfSides [
+Dice >> initializeAs: aType OfSides: aNumberOfSides [
 	type := aType.
 	quantityOfSides := aNumberOfSides
 ]

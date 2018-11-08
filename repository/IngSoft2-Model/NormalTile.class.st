@@ -1,6 +1,6 @@
 Class {
 	#name : #NormalTile,
-	#superclass : #Object,
+	#superclass : #Tile,
 	#category : #'IngSoft2-Model'
 }
 

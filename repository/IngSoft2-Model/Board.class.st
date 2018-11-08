@@ -8,26 +8,26 @@ Class {
 }
 
 { #category : #initialization }
-Board class >> madeOf: aGroupOfTiles [
-	^ self new initializeMadeOfTiles: aGroupOfTiles.
+Board class >> composedOf: aGroupOfTiles [
+	^ self new initializeComposedOfTiles: aGroupOfTiles.
+]
+
+{ #category : #'instance creation' }
+Board class >> randomlyComposedOf: anAmountOfTiles [
+	| generator tiles |
+	generator := RandomTileGenerator new.
+	tiles := (1 to: anAmountOfTiles) collect: [ :each | generator generateTile ].
+	^self composedOf: tiles
 ]
 
 { #category : #initialization }
-Board class >> withGenerator: aTileGenerator withTiles: aNumberOfTiles [
-	^ self new initializeWithGenerator: aTileGenerator WithTiles: aNumberOfTiles
+Board class >> withTiles: aNumberOfTiles [
+	^ self composedOf: aNumberOfTiles
 ]
 
 { #category : #initialization }
-Board >> initializeMadeOfTiles: aGroupOfTiles. [
+Board >> initializeComposedOfTiles: aGroupOfTiles. [
 tiles:=aGroupOfTiles.
-]
-
-{ #category : #initialization }
-Board >> initializeWithGenerator: aTileGenerator WithTiles: aNumberOfTiles [
-
-	tiles := (1 to: aNumberOfTiles) collect: [ :each | aTileGenerator generateTile ].
-	
-	
 ]
 
 { #category : #accessing }

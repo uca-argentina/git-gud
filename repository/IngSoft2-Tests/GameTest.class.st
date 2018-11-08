@@ -5,19 +5,93 @@ Class {
 }
 
 { #category : #tests }
-GameTest >> testAtomicBombMovesPlayers [
-
-
-	| board atomicBomb normalTile john tim players dice dices game |
+GameTest >> createTilesAtomicBombNormalTile [
+	| atomicBomb tiles normalTile |
 	atomicBomb := AtomicBomb new.
 	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: atomicBomb with: normalTile)) withTiles: 20.
+	tiles := OrderedCollection new.
+	(1 to: 10)
+		do: [ :each | 
+			tiles add: atomicBomb.
+			tiles add: normalTile ].
+	^ tiles
+]
+
+{ #category : #'as yet unclassified' }
+GameTest >> createTilesMoonWalkNormalTile [
+	| moonwalk tiles normalTile |
+	moonwalk := MoonWalk ofValue: 3.
+	normalTile := NormalTile new.
+	tiles := OrderedCollection new.
+	(1 to: 10)
+		do: [ :each | 
+			tiles add: moonwalk.
+			tiles add: normalTile ].
+	
+	^ tiles
+]
+
+{ #category : #'as yet unclassified' }
+GameTest >> createTilesNormalTile [
+	|  tiles normalTile |
+	normalTile := NormalTile new.
+	tiles := OrderedCollection new.
+	(1 to: 11) do: [ :each | tiles add: normalTile ].
+	^ tiles
+]
+
+{ #category : #tests }
+GameTest >> createTilesSpeedUpNormalTile [
+	| speedUp tiles normalTile |
+	speedUp := SpeedUp new.
+	normalTile := NormalTile new.
+	tiles := OrderedCollection new.
+	(1 to: 10)
+		do: [ :each | 
+			tiles add: speedUp.
+			tiles add: normalTile ].
+	
+	^ tiles
+]
+
+{ #category : #'as yet unclassified' }
+GameTest >> createTilesWormHole [
+	| tiles wormhole |
+	wormhole := WormHole new.
+	tiles := OrderedCollection new.
+	(1 to: 20) do: [ :each | tiles add: wormhole ].
+	^ tiles
+]
+
+{ #category : #'as yet unclassified' }
+GameTest >> createTilesWormHoleNormalTile [
+	| wormhole tiles normalTile |
+	wormhole := WormHole new.
+	normalTile := NormalTile new.
+	tiles := OrderedCollection new.
+	(1 to: 10)
+		do: [ :each | 
+			tiles add: wormhole.
+			tiles add: normalTile ].
+	^ tiles
+]
+
+{ #category : #tests }
+GameTest >> testAtomicBombMovesPlayers [
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesAtomicBombNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice
+		of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1))
+		withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3. 
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -33,21 +107,23 @@ GameTest >> testAtomicBombMovesPlayers [
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
 	self assert: (game positionOf: tim) equals: 1.
-	self assert: (game lapOf: tim) equals: 0.
+	self assert: (game lapOf: tim) equals: 0
 ]
 
 { #category : #tests }
 GameTest >> testCantBeWonWhilePlaying [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: normalTile)) withTiles: 11.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 2.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -60,39 +136,29 @@ GameTest >> testCantBeWonWhilePlaying [
 	self assert: (game positionOf: tim) equals: 2.
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: john.
-	self should: [ game wonBy: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'El juego no terminó todavia' ].
-	game turnOf: tim.
-	game turnOf: john.
-	game turnOf: tim.
-	game turnOf: john.
-	self assert: (game positionOf: john) equals: 10.
-	self assert: (game lapOf: john) equals: 1.
-	self assert: (game positionOf: tim) equals: 4.
+	self assert: (game positionOf: john) equals: 11.
+	self assert: (game lapOf: john) equals: 0.
+	self assert: (game positionOf: tim) equals: 2.
 	self assert: (game lapOf: tim) equals: 0.
+	self should: [ game wonBy: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The game has not ended yet' ].
 	game turnOf: tim.
-	game turnOf: john.
-	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'El juego ya termino' ].
-	self assert: (game positionOf: john) equals: 4.
-	self assert: (game lapOf: john) equals: 2.
-	self assert: (game positionOf: tim) equals: 5.
-	self assert: (game lapOf: tim) equals: 0.
-	self assert: game hasEnded.
-	self assert: (game placeOf: tim) equals: 2.
-	self assert: (game wonBy: john).
+	game turnOf: john
 ]
 
 { #category : #tests }
 GameTest >> testGameCanEnd [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: normalTile)) withTiles: 11.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 2.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -106,6 +172,10 @@ GameTest >> testGameCanEnd [
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: john.
 	game turnOf: tim.
+	self assert: (game positionOf: john) equals: 11.
+	self assert: (game lapOf: john) equals: 0.
+	self assert: (game positionOf: tim) equals: 3.
+	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: john.
 	game turnOf: tim.
 	game turnOf: john.
@@ -115,45 +185,47 @@ GameTest >> testGameCanEnd [
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: tim.
 	game turnOf: john.
-	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'El juego ya termino' ].
+	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The game has already ended' ].
 	self assert: (game positionOf: john) equals: 4.
 	self assert: (game lapOf: john) equals: 2.
 	self assert: (game positionOf: tim) equals: 5.
 	self assert: (game lapOf: tim) equals: 0.
-	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'El juego ya termino' ].
-	self assert: game hasEnded.
+	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The game has already ended' ].
+	self assert: game hasEnded
 ]
 
 { #category : #tests }
 GameTest >> testGameIsCreated [
-	| board speedUp normalTile john tim players dice1 dice2 dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: speedUp with: normalTile)) withTiles: 20.
+	| board john tim players dice1 dice2 dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice1 := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
-	dice2 := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice1 := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice2 := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice1 with: dice2.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
-	
-	
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded
 ]
 
 { #category : #tests }
-GameTest >> testGamePlaceOfTimEquals2 [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: normalTile)) withTiles: 11.
+GameTest >> testGamePlaceOfReturnsOrderOfPlayers [
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 2.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -176,27 +248,29 @@ GameTest >> testGamePlaceOfTimEquals2 [
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: tim.
 	game turnOf: john.
-	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'El juego ya termino' ].
+	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The game has already ended' ].
 	self assert: (game positionOf: john) equals: 4.
 	self assert: (game lapOf: john) equals: 2.
 	self assert: (game positionOf: tim) equals: 5.
 	self assert: (game lapOf: tim) equals: 0.
 	self assert: game hasEnded.
-	self assert: (game placeOf: tim) equals: 2.
+	self assert: (game placeOf: tim) equals: 2
 ]
 
 { #category : #tests }
 GameTest >> testGamePlayerThrowsDice [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: speedUp with: normalTile)) withTiles: 20.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -204,66 +278,72 @@ GameTest >> testGamePlayerThrowsDice [
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: john.
 	self assert: (game positionOf: john) equals: 6.
-	self assert: (game lapOf: john) equals: 0.
+	self assert: (game lapOf: john) equals: 0
 ]
 
 { #category : #tests }
 GameTest >> testGameRespectsTurns [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: speedUp with: normalTile)) withTiles: 20.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
 	self assert: (game positionOf: tim) equals: 1.
 	self assert: (game lapOf: tim) equals: 0.
-	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'No es el turno del jugador' ].
+	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'It´s not the player´s turn' ].
 	game turnOf: john.
 	game turnOf: tim.
 	self assert: (game positionOf: john) equals: 6.
 	self assert: (game lapOf: john) equals: 0.
 	self assert: (game positionOf: tim) equals: 2.
-	self assert: (game lapOf: tim) equals: 0.
+	self assert: (game lapOf: tim) equals: 0
 ]
 
 { #category : #tests }
 GameTest >> testGameStartingPositionIsOneAndLapIsZero [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: speedUp with: normalTile)) withTiles: 20.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
 	self assert: (game positionOf: tim) equals: 1.
-	self assert: (game lapOf: john) equals: 0.
+	self assert: (game lapOf: john) equals: 0
 ]
 
 { #category : #tests }
 GameTest >> testGameWonByJohn [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: normalTile)) withTiles: 11.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 2.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -287,29 +367,30 @@ GameTest >> testGameWonByJohn [
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: tim.
 	game turnOf: john.
-	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'El juego ya termino' ].
+	self should: [ game turnOf: tim ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The game has already ended' ].
 	self assert: (game positionOf: john) equals: 4.
 	self assert: (game lapOf: john) equals: 2.
 	self assert: (game positionOf: tim) equals: 5.
 	self assert: (game lapOf: tim) equals: 0.
 	self assert: game hasEnded.
 	self assert: (game placeOf: tim) equals: 2.
-	self assert: (game wonBy: john).
-	
+	self assert: (game wonBy: john)
 ]
 
 { #category : #tests }
 GameTest >> testMoonWalkMovesOtherPlayers [
-	| board moonWalk normalTile john tim players dice dices game |
-	moonWalk := MoonWalk withValue: 3.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: moonWalk with: normalTile)) withTiles: 20.
-	john :=  'John'.
-	tim :=  'Tim'.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesMoonWalkNormalTile.
+	john := 'John'.
+	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 2 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 2 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps:3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -320,21 +401,23 @@ GameTest >> testMoonWalkMovesOtherPlayers [
 	self assert: (game positionOf: john) equals: 3.
 	self assert: (game lapOf: john) equals: 0.
 	self assert: (game positionOf: tim) equals: 3.
-	self assert: (game lapOf: john) equals: 0.
+	self assert: (game lapOf: john) equals: 0
 ]
 
 { #category : #tests }
 GameTest >> testNegativeLapsExist [
-	| board wormHole john tim players dice dices game |
-	wormHole := WormHole new.
-	
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: wormHole)) withTiles: 20.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesWormHole.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(1 1 1 1 1 1 1 1 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(1 1 1 1 1 1 1 1 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -347,47 +430,60 @@ GameTest >> testNegativeLapsExist [
 	self assert: (game positionOf: tim) equals: 18.
 	self assert: (game lapOf: tim) equals: -1.
 	game turnOf: john.
-	
 	self assert: (game positionOf: john) equals: 15.
-	self assert: (game lapOf: john) equals: -1.
+	self assert: (game lapOf: john) equals: -1
 ]
 
 { #category : #tests }
 GameTest >> testPlayerDoesNotExist [
-| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: speedUp with: normalTile)) withTiles: 20.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
 	self assert: (game positionOf: tim) equals: 1.
 	self assert: (game lapOf: tim) equals: 0.
-	self should: [ game positionOf: 'pepe' ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'No existe el jugador solicitado' ].
-	self should: [ game placeOf: 'pepe' ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'No existe el jugador' ].
+	self
+		should: [ game positionOf: 'pepe' ]
+		raise: AssertionFailure
+		withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
+	self
+		should: [ game lapOf: 'pepe' ]
+		raise: AssertionFailure
+		withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
+	self
+		should: [ game placeOf: 'pepe' ]
+		raise: AssertionFailure
+		withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
 	game turnOf: john.
 	self assert: (game positionOf: john) equals: 6.
-	self assert: (game lapOf: john) equals: 0.
+	self assert: (game lapOf: john) equals: 0
 ]
 
 { #category : #tests }
 GameTest >> testSpeedUpMovesPlayer [
-	| board speedUp normalTile john tim players dice dices game |
-	speedUp := SpeedUp new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: speedUp  with: normalTile)) withTiles: 20.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesSpeedUpNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -401,21 +497,23 @@ GameTest >> testSpeedUpMovesPlayer [
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: john.
 	self assert: (game positionOf: john) equals: 15.
-	self assert: (game lapOf: john) equals: 0.
+	self assert: (game lapOf: john) equals: 0
 ]
 
 { #category : #tests }
 GameTest >> testWormHoleMovesPlayer [
-	| board wormHole normalTile john tim players dice dices game |
-	wormHole := WormHole new.
-	normalTile := NormalTile new.
-	board := Board withGenerator: (DeterministicTileGenerator withBoard: (Array with: wormHole with: normalTile)) withTiles: 20.
+	| board john tim players dice dices game |
+	board := Board composedOf: self createTilesWormHoleNormalTile.
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice withType: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
 	dices := Array with: dice.
-	game := Game playedBy: players throwing: dices onABoard: board withNumberOfLaps: 3.
+	game := Game
+		playedBy: players
+		throwing: dices
+		onABoard: board
+		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -428,9 +526,8 @@ GameTest >> testWormHoleMovesPlayer [
 	self assert: (game positionOf: tim) equals: 2.
 	self assert: (game lapOf: tim) equals: 0.
 	game turnOf: john.
-	
 	self assert: (game positionOf: john) equals: 7.
 	self assert: (game lapOf: john) equals: 0.
-	
-	
+	self assert: (game positionOf: tim) equals: 2.
+	self assert: (game lapOf: tim) equals: 0
 ]

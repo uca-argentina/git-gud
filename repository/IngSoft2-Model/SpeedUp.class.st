@@ -1,10 +1,10 @@
 Class {
 	#name : #SpeedUp,
-	#superclass : #Object,
+	#superclass : #Tile,
 	#category : #'IngSoft2-Model'
 }
 
 { #category : #actions }
 SpeedUp >> activateEffectforGame: aGame [
-	aGame activateSpeedUp
+	aGame changePositionOf: aGame currentPlayer by: 4.
 ]

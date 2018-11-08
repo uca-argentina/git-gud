@@ -1,6 +1,6 @@
 Class {
 	#name : #GameEnded,
-	#superclass : #Object,
+	#superclass : #GameState,
 	#category : #'IngSoft2-Model'
 }
 
@@ -10,11 +10,11 @@ GameEnded >> hasEnded [
 ]
 
 { #category : #actions }
-GameEnded >> turnOf: aPlayer withGame: aGame [
+GameEnded >> turnOf: aPlayer in: aGame [
 aGame turnOfWhenGameHasEnded: aPlayer.
 ]
 
 { #category : #actions }
-GameEnded >> wonBy: aPlayer withGame: aGame [
+GameEnded >> wonBy: aPlayer in: aGame [
 	^ aGame whenGameHasEndedWonBy: aPlayer
 ]
