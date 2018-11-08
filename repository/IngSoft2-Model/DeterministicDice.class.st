@@ -2,9 +2,9 @@ Class {
 	#name : #DeterministicDice,
 	#superclass : #Object,
 	#instVars : [
-		'QuantityOfSides',
 		'futureThrows',
-		'nextThrow'
+		'nextThrow',
+		'quantityOfSides'
 	],
 	#category : #'IngSoft2-Model'
 }
@@ -24,7 +24,7 @@ nextThrow:=0.
 
 { #category : #actions }
 DeterministicDice >> throw: aDice [
-	futureThrows := futureThrows select: [ :number | number < (aDice quantityOfSides + 1) & (number > 0) ].	"Me quedo solo con los valores que esten entre 1 y quantity of sides "
+	futureThrows := futureThrows select: [ :number | number < (aDice quantityOfSides + 1) & (number > 0) ].	
 	nextThrow := nextThrow + 1.
-	^ futureThrows at: nextThrow.
+	^ futureThrows at: nextThrow
 ]

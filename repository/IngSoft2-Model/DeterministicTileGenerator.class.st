@@ -17,8 +17,8 @@ DeterministicTileGenerator class >> withBoard: aGroupOfTiles [
 DeterministicTileGenerator >> generateTile [
 	nextTile := nextTile + 1 > tiles size
 		ifTrue: [ 1 ]
-		ifFalse: [ "Para que si ya tiraron todos vuelva a empezar" nextTile + 1 ].
-		^tiles at: nextTile.
+		ifFalse: [ nextTile + 1 ].
+	^ tiles at: nextTile
 ]
 
 { #category : #initialization }

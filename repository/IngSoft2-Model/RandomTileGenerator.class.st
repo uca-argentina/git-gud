@@ -20,7 +20,7 @@ RandomTileGenerator >> generateTile [
 	aRandomInt > 88 & (aRandomInt < 99)
 		ifTrue: [ 
 			anotherRandomInt:=aRandomSeries nextInt: 5.
-			^ (MoonWalk withValue: anotherRandomInt) ].
+			^ (MoonWalk ofValue: anotherRandomInt) ].
 	aRandomInt > 98 & (aRandomInt < 101)
 		ifTrue: [ ^ AtomicBomb new ]
 ]

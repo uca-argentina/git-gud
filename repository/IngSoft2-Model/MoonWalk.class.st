@@ -1,6 +1,6 @@
 Class {
 	#name : #MoonWalk,
-	#superclass : #Object,
+	#superclass : #Tile,
 	#instVars : [
 		'backwardValue'
 	],
@@ -8,16 +8,16 @@ Class {
 }
 
 { #category : #'initialize-release' }
-MoonWalk class >> withValue: anInteger [
-^self new initializeWithValue: anInteger.
+MoonWalk class >> ofValue: anInteger [
+^self new initializeOfValue: anInteger.
 ]
 
 { #category : #actions }
 MoonWalk >> activateEffectforGame: aGame [
-	aGame activateMoonWalkWithAmount: backwardValue .
+	( aGame players copyWithout: aGame currentPlayer )do:[:each | aGame changePositionOf: each by:backwardValue negated ]
 ]
 
 { #category : #'initialize-release' }
-MoonWalk >> initializeWithValue: anInteger [
-backwardValue:= anInteger.
+MoonWalk >> initializeOfValue: aValue [
+	backwardValue := aValue
 ]
