@@ -1,30 +1,29 @@
 Class {
 	#name : #DeterministicDice,
-	#superclass : #Object,
+	#superclass : #Dice,
 	#instVars : [
 		'futureThrows',
-		'nextThrow',
-		'quantityOfSides'
+		'nextThrow'
 	],
 	#category : #'IngSoft2-Model'
 }
 
 { #category : #initialization }
-DeterministicDice class >> withFutureThrows: aThrowsArray [
-^self new initializeWithFutureThrows: aThrowsArray.
-	
+DeterministicDice class >> withFutureThrows: aThrowsArray andSides: aNumberOfSides [
+	self assertValidNumberOfSides: aNumberOfSides.
+	^ self new initializeWithFutureThrows: aThrowsArray andSides: aNumberOfSides
 ]
 
 { #category : #initialization }
-DeterministicDice >> initializeWithFutureThrows: aThrowsArray [
-futureThrows :=aThrowsArray.
-nextThrow:=0.
-
+DeterministicDice >> initializeWithFutureThrows: aThrowsArray andSides: aNumberOfSides [
+	quantityOfSides :=aNumberOfSides.
+	futureThrows := aThrowsArray.
+	nextThrow := 0
 ]
 
 { #category : #actions }
-DeterministicDice >> throw: aDice [
-	futureThrows := futureThrows select: [ :number | number < (aDice quantityOfSides + 1) & (number > 0) ].	
+DeterministicDice >> throw [
+	futureThrows := futureThrows select: [ :number | number < ( quantityOfSides + 1) & (number > 0) ].
 	nextThrow := nextThrow + 1.
 	^ futureThrows at: nextThrow
 ]

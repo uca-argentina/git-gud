@@ -2,8 +2,7 @@ Class {
 	#name : #Dice,
 	#superclass : #Object,
 	#instVars : [
-		'quantityOfSides',
-		'type'
+		'quantityOfSides'
 	],
 	#category : #'IngSoft2-Model'
 }
@@ -14,18 +13,6 @@ Dice class >> assertValidNumberOfSides: anInteger [
 	ifTrue: [ AssertionFailure signal:'The quantity of sides must be greater than zero' ].
 ]
 
-{ #category : #initialization }
-Dice class >> of: aType withSides: anNumberOfSides [
-	self assertValidNumberOfSides: anNumberOfSides.
-	^ self new initializeAs: aType OfSides: anNumberOfSides
-]
-
-{ #category : #initialization }
-Dice >> initializeAs: aType OfSides: aNumberOfSides [
-	type := aType.
-	quantityOfSides := aNumberOfSides
-]
-
 { #category : #accesing }
 Dice >> quantityOfSides [
 	^ quantityOfSides
@@ -33,5 +20,5 @@ Dice >> quantityOfSides [
 
 { #category : #actions }
 Dice >> throw [
-	^type throw: self.
+	self subclassResponsibility
 ]

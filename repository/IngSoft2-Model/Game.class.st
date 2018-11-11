@@ -8,7 +8,11 @@ Class {
 		'turn',
 		'stateOfGame',
 		'board',
-		'winningLap'
+		'winningLap',
+		'cardGenerator',
+		'playerHands',
+		'activePermanentCards',
+		'lastTileActivated'
 	],
 	#category : #'IngSoft2-Model'
 }
@@ -20,9 +24,19 @@ Game class >> assertNumberOfTilesGreaterThanZero: anInteger [
 ]
 
 { #category : #initialization }
-Game class >> playedBy: aPlayerArray throwing: aDiceArray onABoard: aBoard withNumberOfLaps: aNumberOfLaps [
-	self assertNumberOfTilesGreaterThanZero: (aBoard tiles) size.
-	^ self new initializePlayedBy: aPlayerArray throwing: aDiceArray onABoard: aBoard withNumberOfLaps: aNumberOfLaps
+Game class >> playedBy: aPlayerArray throwing: aDiceArray onABoard: aBoard withCardGenerator: aCardGenerator  withNumberOfLaps: aNumberOfLaps [
+	self assertNumberOfTilesGreaterThanZero: aBoard tiles size.
+	^ self new
+		initializePlayedBy: aPlayerArray
+		throwing: aDiceArray
+		onABoard: aBoard
+		withCardGenerator: aCardGenerator
+		withNumberOfLaps: aNumberOfLaps
+]
+
+{ #category : #adding }
+Game >> addPermanentCard: aCard to: aPlayer [
+(activePermanentCards at: aPlayer) add: aCard
 ]
 
 { #category : #actions }
@@ -30,6 +44,11 @@ Game >> advanceTurn [
 	turn := turn + 1 > self players size
 		ifTrue: [ 1 ]
 		ifFalse: [ turn + 1 ]
+]
+
+{ #category : #accessing }
+Game >> amountOfActivePermanentCardsfor: aPlayer [
+^(activePermanentCards at: aPlayer)size.
 ]
 
 { #category : #asserting }
@@ -48,23 +67,48 @@ Game >> currentPlayer [
 	^self players at: turn.
 ]
 
+{ #category : #accessing }
+Game >> currentTilefor: aPlayer [
+	^ board tiles at: (self positionOf: aPlayer)
+]
+
+{ #category : #actions }
+Game >> drawCardForPlayer: aPlayer [
+	(playerHands at: aPlayer) add: cardGenerator generateCard.
+	
+]
+
+{ #category : #accessing }
+Game >> handSizeOf: aPlayer [
+	^ ((playerHands at: aPlayer) size)
+]
+
 { #category : #testing }
 Game >> hasEnded [
 	^stateOfGame hasEnded.
 ]
 
 { #category : #initialization }
-Game >> initializePlayedBy: aGroupOfPlayers throwing: aGroupOfDices onABoard: aBoard withNumberOfLaps: aNumberOfLaps [
+Game >> initializePlayedBy: aGroupOfPlayers throwing: aGroupOfDices onABoard: aBoard withCardGenerator: aCardGenerator withNumberOfLaps: aNumberOfLaps [
 	dices := aGroupOfDices.
 	board := aBoard.
 	turn := 1.
 	stateOfGame := GamePlaying new.
 	positions := Dictionary new.
 	laps := Dictionary new.
-	
+	cardGenerator := aCardGenerator.
 	aGroupOfPlayers do: [ :each | positions at: each put: 1 ].
 	aGroupOfPlayers do: [ :each | laps at: each put: 0 ].
-	winningLap := aNumberOfLaps
+	winningLap := aNumberOfLaps.
+	playerHands := Dictionary new.
+	activePermanentCards := Dictionary new.
+	lastTileActivated := NormalTile new -> (aGroupOfPlayers at: 1).
+	aGroupOfPlayers
+		do: [ :player | 
+			playerHands at: player put: OrderedCollection new.
+			self drawCardForPlayer: player.
+			self drawCardForPlayer: player ].
+	aGroupOfPlayers do: [ :each | activePermanentCards at: each put: OrderedCollection new ]
 ]
 
 { #category : #accessing }
@@ -75,23 +119,77 @@ Game >> lapOf: aPlayer [
 ]
 
 { #category : #accessing }
+Game >> lastTileActivated [
+^lastTileActivated 
+]
+
+{ #category : #accessing }
 Game >> placeOf: aPlayer [
 	^ (self players asSortedCollection: [ :player | self lapOf: player ] descending , [ :player | self positionOf: player ] descending)
 		detectIndex: [ :player | player = aPlayer ]
 		ifNone: [ AssertionFailure signal: 'The requested player does not exist' ]
 ]
 
+{ #category : #actions }
+Game >> playAccelerationFromPlayer: aPlayer [
+	aPlayer = self currentPlayer
+		ifTrue: [ (playerHands at: aPlayer)
+				remove: ((playerHands at: aPlayer) detect: [ :card | card class = Acceleration ] ifNone: [ AssertionFailure signal: 'The player does not possess an Acceleration card' ]).
+			(Acceleration new) activateCardEffectForPlayer: aPlayer in: self ]
+		ifFalse: [ AssertionFailure signal: 'Permanent Cards can only be played in the player´s turn' ]
+]
+
+{ #category : #actions }
+Game >> playCancellationFromPlayer: aPlayer ForCard: aCard [
+	(playerHands at: aPlayer)
+		remove: ((playerHands at: aPlayer) detect: [ :card | card class = Cancellation  ] ifNone: [ AssertionFailure signal: 'The player does not possess a Cancellation card' ]).
+]
+
+{ #category : #actions }
+Game >> playOverloadFromPlayer: aPlayer toPlayer: targetPlayer [
+	aPlayer = self currentPlayer
+		ifTrue: [ (playerHands at: aPlayer)
+				remove: ((playerHands at: aPlayer) detect: [ :card | card class = Overload ] ifNone: [ AssertionFailure signal: 'The player does not possess an Overload card' ]).
+			Overload new activateCardEffectForPlayer: targetPlayer in: self ]
+		ifFalse: [ AssertionFailure signal: 'Permanent Cards can only be played in the player´s turn' ]
+]
+
+{ #category : #actions }
+Game >> playRedoFromPlayer: aPlayer [
+	(playerHands at: aPlayer)
+		remove: ((playerHands at: aPlayer) detect: [ :card | card class = Redo ] ifNone: [ AssertionFailure signal: 'The player does not possess a Redo card' ])
+]
+
+{ #category : #actions }
+Game >> playRepeatFromPlayer: aPlayer [
+	(playerHands at: aPlayer)
+		remove: ((playerHands at: aPlayer) detect: [ :card | card class = Repeat ] ifNone: [ AssertionFailure signal: 'The player does not possess a Repeat card' ]).
+	
+	Repeat new activateCardEffectForPlayer: lastTileActivated value in: self.
+	self recalculateLaps
+]
+
+{ #category : #actions }
+Game >> playSpeedFromPlayer: aPlayer toPlayer: targetPlayer [
+	aPlayer = self currentPlayer
+		ifTrue: [ (playerHands at: aPlayer)
+				remove: ((playerHands at: aPlayer) detect: [ :card | card class = Speed ] ifNone: [ AssertionFailure signal: 'The player does not possess a Speed card' ]).
+			Speed new activateCardEffectForPlayer: targetPlayer in: self ]
+		ifFalse: [ AssertionFailure signal: 'Permanent Cards can only be played in the player´s turn' ]
+]
+
 { #category : #accessing }
 Game >> playTurnFor: aPlayer [
-	|totalRoll|
-	totalRoll := dices sumNumbers: [:dice | dice throw ].
+	| totalRoll |
+	totalRoll := dices sumNumbers: [ :dice | dice throw ].
+	totalRoll := totalRoll + ((activePermanentCards at: aPlayer) sumNumbers: [ :card | card outcome ]).
 	self changePositionOf: aPlayer by: totalRoll.
 	self recalculateLaps.
-	(board tiles at: (self positionOf: aPlayer)) activateEffectforGame: self.
+	lastTileActivated := (self currentTilefor: aPlayer) -> aPlayer.
+	(self currentTilefor: aPlayer) activateEffectforGame: self forPlayer: self currentPlayer.
 	self recalculateLaps.
-	((self lapOf: aPlayer) >= winningLap )								
-		ifTrue: [ 
-			self updateGameState ]
+	(self lapOf: aPlayer) >= winningLap
+		ifTrue: [ self updateGameState ]
 ]
 
 { #category : #accessing }

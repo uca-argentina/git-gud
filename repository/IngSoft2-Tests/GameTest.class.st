@@ -4,7 +4,7 @@ Class {
 	#category : #'IngSoft2-Tests'
 }
 
-{ #category : #tests }
+{ #category : #'extract methods' }
 GameTest >> createTilesAtomicBombNormalTile [
 	| atomicBomb tiles normalTile |
 	atomicBomb := AtomicBomb new.
@@ -18,6 +18,16 @@ GameTest >> createTilesAtomicBombNormalTile [
 ]
 
 { #category : #'as yet unclassified' }
+GameTest >> createTilesDrawACardTile [
+		|  tiles drawACard |
+	drawACard := DrawACard  new.
+	tiles := OrderedCollection new.
+	(1 to: 11) do: [ :each | tiles add: drawACard ].
+	^ tiles
+	
+]
+
+{ #category : #'extract methods' }
 GameTest >> createTilesMoonWalkNormalTile [
 	| moonwalk tiles normalTile |
 	moonwalk := MoonWalk ofValue: 3.
@@ -31,16 +41,16 @@ GameTest >> createTilesMoonWalkNormalTile [
 	^ tiles
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'extract methods' }
 GameTest >> createTilesNormalTile [
-	|  tiles normalTile |
+		|  tiles normalTile |
 	normalTile := NormalTile new.
 	tiles := OrderedCollection new.
 	(1 to: 11) do: [ :each | tiles add: normalTile ].
 	^ tiles
 ]
 
-{ #category : #tests }
+{ #category : #'extract methods' }
 GameTest >> createTilesSpeedUpNormalTile [
 	| speedUp tiles normalTile |
 	speedUp := SpeedUp new.
@@ -54,7 +64,7 @@ GameTest >> createTilesSpeedUpNormalTile [
 	^ tiles
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'extract methods' }
 GameTest >> createTilesWormHole [
 	| tiles wormhole |
 	wormhole := WormHole new.
@@ -63,7 +73,7 @@ GameTest >> createTilesWormHole [
 	^ tiles
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'extract methods' }
 GameTest >> createTilesWormHoleNormalTile [
 	| wormhole tiles normalTile |
 	wormhole := WormHole new.
@@ -83,14 +93,13 @@ GameTest >> testAtomicBombMovesPlayers [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice
-		of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1))
-		withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -117,12 +126,13 @@ GameTest >> testCantBeWonWhilePlaying [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -152,12 +162,13 @@ GameTest >> testGameCanEnd [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -201,13 +212,14 @@ GameTest >> testGameIsCreated [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice1 := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
-	dice2 := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice1 := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
+	dice2 := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice1 with: dice2.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded
 ]
@@ -219,12 +231,13 @@ GameTest >> testGamePlaceOfReturnsOrderOfPlayers [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -264,13 +277,14 @@ GameTest >> testGamePlayerThrowsDice [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withNumberOfLaps: 3.
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -288,12 +302,13 @@ GameTest >> testGameRespectsTurns [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -316,12 +331,13 @@ GameTest >> testGameStartingPositionIsOneAndLapIsZero [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -337,12 +353,13 @@ GameTest >> testGameWonByJohn [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -384,13 +401,14 @@ GameTest >> testMoonWalkMovesOtherPlayers [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 2 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 2 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withNumberOfLaps: 3.
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
@@ -411,12 +429,13 @@ GameTest >> testNegativeLapsExist [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(1 1 1 1 1 1 1 1 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(1 1 1 1 1 1 1 1 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -441,30 +460,22 @@ GameTest >> testPlayerDoesNotExist [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
 	self assert: (game lapOf: john) equals: 0.
 	self assert: (game positionOf: tim) equals: 1.
 	self assert: (game lapOf: tim) equals: 0.
-	self
-		should: [ game positionOf: 'pepe' ]
-		raise: AssertionFailure
-		withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
-	self
-		should: [ game lapOf: 'pepe' ]
-		raise: AssertionFailure
-		withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
-	self
-		should: [ game placeOf: 'pepe' ]
-		raise: AssertionFailure
-		withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
+	self should: [ game positionOf: 'pepe' ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
+	self should: [ game lapOf: 'pepe' ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
+	self should: [ game placeOf: 'pepe' ] raise: AssertionFailure withExceptionDo: [ :signal | self assert: signal messageText equals: 'The requested player does not exist' ].
 	game turnOf: john.
 	self assert: (game positionOf: john) equals: 6.
 	self assert: (game lapOf: john) equals: 0
@@ -477,12 +488,13 @@ GameTest >> testSpeedUpMovesPlayer [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -507,12 +519,13 @@ GameTest >> testWormHoleMovesPlayer [
 	john := 'John'.
 	tim := 'Tim'.
 	players := Array with: john with: tim.
-	dice := Dice of: (DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1)) withSides: 5.
+	dice := DeterministicDice withFutureThrows: #(5 1 5 1 5 1 5 1 5 1) andSides: 5.
 	dices := Array with: dice.
 	game := Game
 		playedBy: players
 		throwing: dices
 		onABoard: board
+		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
