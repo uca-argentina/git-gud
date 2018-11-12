@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-Speed >> activateCardEffectForPlayer: aPlayer in: aGame [
-	aGame addPermanentCard: Speed new to: aPlayer
+Speed >> activateCardEffectFor: aPlayer in: aGame [
+	aGame addPermanentCard: self to: aPlayer
 ]
 
 { #category : #'as yet unclassified' }

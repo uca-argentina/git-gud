@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-Overload >> activateCardEffectForPlayer: aPlayer in: aGame [
-	aGame addPermanentCard: Overload new to: aPlayer
+Overload >> activateCardEffectFor: aPlayer in: aGame [
+	aGame addPermanentCard: self to: aPlayer
 ]
 
 { #category : #'as yet unclassified' }

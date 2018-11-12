@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-Acceleration >> activateCardEffectForPlayer: aPlayer in: aGame [
+Acceleration >> activateCardEffectFor: aPlayer in: aGame [
 	aGame players do: [ :player | aGame addPermanentCard: self to: player ]
 ]
 
