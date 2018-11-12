@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-Repeat >> activateCardEffectForPlayer: aPlayer in: aGame [
+Repeat >> activateCardEffectFor: aPlayer in: aGame [
 	((aGame lastTileActivated) key) activateEffectforGame: aGame forPlayer: aPlayer
 ]
