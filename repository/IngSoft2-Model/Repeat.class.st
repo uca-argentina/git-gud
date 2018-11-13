@@ -6,5 +6,6 @@ Class {
 
 { #category : #'as yet unclassified' }
 Repeat >> activateCardEffectFor: aPlayer in: aGame [
-	((aGame lastTileActivated) key) activateEffectforGame: aGame forPlayer: aPlayer
+	aGame assertPlayerExists: aPlayer.
+	aGame lastTileActivated key activateEffectforGame: aGame forPlayer: aPlayer
 ]
