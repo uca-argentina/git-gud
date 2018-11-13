@@ -6,6 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 Overload >> activateCardEffectFor: aPlayer in: aGame [
+	aGame assertPlayerExists: aPlayer.
 	aGame addPermanentCard: self to: aPlayer
 ]
 

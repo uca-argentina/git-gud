@@ -6,5 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 Redo >> activateCardEffectFor: aTarget in: aGame [
-aGame lastCardActivated activateCardEffectFor: aTarget in: aGame.
+	(Card allSubclasses includes: aTarget class)|(aGame players includes: aTarget)
+		ifFalse: [ AssertionFailure signal: 'The target for Redo is not correct for this card' ].
+	aGame lastCardActivated activateCardEffectFor: aTarget in: aGame
 ]
