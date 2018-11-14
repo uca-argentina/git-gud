@@ -1,10 +1,10 @@
 Class {
-	#name : #CardGenerator,
+	#name : #Deck,
 	#superclass : #Object,
 	#category : #'IngSoft2-Model'
 }
 
 { #category : #actions }
-CardGenerator >> generateCard [
+Deck >> drawCard [
 	self subclassResponsibility 
 ]

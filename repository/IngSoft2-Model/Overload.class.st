@@ -4,13 +4,12 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 Overload >> activateCardEffectFor: aPlayer in: aGame [
-	aGame assertPlayerExists: aPlayer.
 	aGame addPermanentCard: self to: aPlayer
 ]
 
-{ #category : #'as yet unclassified' }
-Overload >> outcome [
+{ #category : #actions }
+Overload >> tilesToMove [
 	^ (-2)
 ]

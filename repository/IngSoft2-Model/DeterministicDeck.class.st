@@ -1,6 +1,6 @@
 Class {
-	#name : #DeterministicCardGenerator,
-	#superclass : #CardGenerator,
+	#name : #DeterministicDeck,
+	#superclass : #Deck,
 	#instVars : [
 		'futureCards',
 		'currentDeckPosition'
@@ -12,21 +12,22 @@ Class {
 }
 
 { #category : #initialization }
-DeterministicCardGenerator class >> withFutureCards: aCardsArray [
+DeterministicDeck class >> withFutureCards: aCardsArray [
 	^self new initializeWithFutureCards: aCardsArray.
 	
 ]
 
 { #category : #actions }
-DeterministicCardGenerator >> generateCard [
+DeterministicDeck >> drawCard [
 	currentDeckPosition := currentDeckPosition + 1.
-	(currentDeckPosition= futureCards size)
-	ifTrue: [currentDeckPosition:=1].
+	currentDeckPosition > futureCards size
+		ifTrue: [ AssertionFailure signal: 'The deck is out of cards' ].
 	^ futureCards at: currentDeckPosition
 ]
 
 { #category : #initialization }
-DeterministicCardGenerator >> initializeWithFutureCards: aCardsArray [
+DeterministicDeck >> initializeWithFutureCards: aCardsArray [
 	futureCards := aCardsArray.
-	currentDeckPosition := 0.
+	
+	currentDeckPosition := 0
 ]

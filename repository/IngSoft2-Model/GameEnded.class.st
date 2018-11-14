@@ -4,6 +4,11 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
+{ #category : #'as yet unclassified' }
+GameEnded >> cardIsPlayed [
+	^AssertionFailure signal: 'Cards can not be played after the game has ended'
+]
+
 { #category : #testing }
 GameEnded >> hasEnded [
 ^true.

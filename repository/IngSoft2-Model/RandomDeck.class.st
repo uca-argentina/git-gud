@@ -1,11 +1,11 @@
 Class {
-	#name : #RandomCardGenerator,
-	#superclass : #CardGenerator,
+	#name : #RandomDeck,
+	#superclass : #Deck,
 	#category : #'IngSoft2-Model'
 }
 
 { #category : #actions }
-RandomCardGenerator >> generateCard [
+RandomDeck >> drawCard [
 	| aRandomSeries aRandomInt |
 	aRandomSeries := Random new.
 	aRandomInt := aRandomSeries nextInt: 6.

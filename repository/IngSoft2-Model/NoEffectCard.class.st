@@ -4,6 +4,6 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 NoEffectCard >> activateCardEffectFor: aPlayer in: aGame [
 ]
