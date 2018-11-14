@@ -1,6 +1,6 @@
 Class {
 	#name : #NoEffectCard,
-	#superclass : #Card,
+	#superclass : #InstantCard,
 	#category : #'IngSoft2-Model'
 }
 
