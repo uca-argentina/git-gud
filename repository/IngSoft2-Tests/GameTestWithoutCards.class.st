@@ -99,7 +99,7 @@ GameTestWithoutCards >> testAtomicBombMovesPlayers [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -132,7 +132,7 @@ GameTestWithoutCards >> testCantBeWonWhilePlaying [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -168,7 +168,7 @@ GameTestWithoutCards >> testGameCanEnd [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -219,7 +219,7 @@ GameTestWithoutCards >> testGameIsCreated [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded
 ]
@@ -237,7 +237,7 @@ GameTestWithoutCards >> testGamePlaceOfReturnsOrderOfPlayers [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -283,7 +283,7 @@ GameTestWithoutCards >> testGamePlayerThrowsDice [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -308,7 +308,7 @@ GameTestWithoutCards >> testGameRespectsTurns [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -337,7 +337,7 @@ GameTestWithoutCards >> testGameStartingPositionIsOneAndLapIsZero [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -359,7 +359,7 @@ GameTestWithoutCards >> testGameWonByJohn [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -407,7 +407,7 @@ GameTestWithoutCards >> testMoonWalkMovesOtherPlayers [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -435,7 +435,7 @@ GameTestWithoutCards >> testNegativeLapsExist [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -466,7 +466,7 @@ GameTestWithoutCards >> testPlayerDoesNotExist [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -494,7 +494,7 @@ GameTestWithoutCards >> testSpeedUpMovesPlayer [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -525,7 +525,7 @@ GameTestWithoutCards >> testWormHoleMovesPlayer [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.

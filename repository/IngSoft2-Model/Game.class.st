@@ -25,13 +25,13 @@ Game class >> assertNumberOfTilesGreaterThanZero: aBoard [
 ]
 
 { #category : #initialization }
-Game class >> playedBy: aPlayerArray throwing: aDiceArray onABoard: aBoard withCardGenerator: aCardGenerator withNumberOfLaps: aNumberOfLaps [
+Game class >> playedBy: aPlayerArray throwing: aDiceArray onABoard: aBoard usingDeck: aDeck withNumberOfLaps: aNumberOfLaps [
 	self assertNumberOfTilesGreaterThanZero: aBoard.
 	^ self new
 		initializePlayedBy: aPlayerArray
 		throwing: aDiceArray
 		onABoard: aBoard
-		withCardGenerator: aCardGenerator
+		usingDeck: aDeck
 		withNumberOfLaps: aNumberOfLaps
 ]
 
@@ -100,20 +100,20 @@ Game >> handSizeOf: aPlayer [
 	^ ((playerHands at: aPlayer) size)
 ]
 
-{ #category : #testing }
+{ #category : #asserting }
 Game >> hasEnded [
 	^stateOfGame hasEnded.
 ]
 
 { #category : #initialization }
-Game >> initializePlayedBy: aGroupOfPlayers throwing: aGroupOfDices onABoard: aBoard withCardGenerator: aCardGenerator withNumberOfLaps: aNumberOfLaps [
+Game >> initializePlayedBy: aGroupOfPlayers throwing: aGroupOfDices onABoard: aBoard usingDeck: aDeck withNumberOfLaps: aNumberOfLaps [
 	dices := aGroupOfDices.
 	board := aBoard.
 	turn := 1.
 	stateOfGame := GamePlaying new.
 	positions := Dictionary new.
 	laps := Dictionary new.
-	cardGenerator := aCardGenerator.
+	cardGenerator := aDeck.
 	aGroupOfPlayers do: [ :each | positions at: each put: 1 ].
 	aGroupOfPlayers do: [ :each | laps at: each put: 0 ].
 	winningLap := aNumberOfLaps.
