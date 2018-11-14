@@ -59,7 +59,7 @@ Game >> amountOfActivePermanentCardsfor: aPlayer [
 
 { #category : #asserting }
 Game >> assertCanPlay: aPlayer [
-	^ (self players at: turn) = aPlayer
+	^ (self currentPlayer ) = aPlayer
 		ifFalse: [ AssertionFailure signal: 'It´s not the player´s turn' ]
 ]
 
@@ -157,14 +157,13 @@ Game >> playAccelerationFromPlayer: aPlayer [
 	| firstCardFound |
 	stateOfGame cardIsPlayed.
 	self assertPlayerExists: aPlayer.
-	aPlayer = self currentPlayer
-		ifTrue: [ firstCardFound := (playerHands at: aPlayer)
-				detect: [ :card | card class = Acceleration ]
-				ifNone: [ AssertionFailure signal: 'The player does not possess an Acceleration card' ].
-			firstCardFound activateCardEffectFor: aPlayer in: self.
-			lastCardActivated := firstCardFound.
-			(playerHands at: aPlayer) remove: firstCardFound ]
-		ifFalse: [ AssertionFailure signal: 'Permanent Cards can only be played in the player´s turn' ]
+	firstCardFound := (playerHands at: aPlayer)
+		detect: [ :card | card class = Acceleration ]
+		ifNone: [ AssertionFailure signal: 'The player does not possess an Acceleration card' ].
+	firstCardFound isPlayableBy: aPlayer in: self.
+	firstCardFound activateCardEffectFor: aPlayer in: self.
+	lastCardActivated := firstCardFound.
+	(playerHands at: aPlayer) remove: firstCardFound
 ]
 
 { #category : #actions }
@@ -175,10 +174,13 @@ Game >> playCancellationFromPlayer: aPlayer ForCard: aCard [
 	self activePermanentCards values
 		detect: [ :cardsOfPlayer | cardsOfPlayer includes: aCard ]
 		ifNone: [ AssertionFailure signal: 'Cancellation requires an active permanent card to cancel' ].
-	firstCardFound := (playerHands at: aPlayer) detect: [ :card | card class = Cancellation ] ifNone: [ AssertionFailure signal: 'The player does not possess a Cancellation card' ].
+	firstCardFound := (playerHands at: aPlayer)
+		detect: [ :card | card class = Cancellation ]
+		ifNone: [ AssertionFailure signal: 'The player does not possess a Cancellation card' ].
 	firstCardFound activateCardEffectFor: aCard in: self.
 	lastCardActivated := firstCardFound.
-	(playerHands at: aPlayer) remove: firstCardFound
+	(playerHands at: aPlayer) remove: firstCardFound.
+	
 ]
 
 { #category : #actions }
@@ -187,12 +189,14 @@ Game >> playOverloadFromPlayer: aPlayer toPlayer: targetPlayer [
 	stateOfGame cardIsPlayed.
 	self assertPlayerExists: aPlayer.
 	self assertPlayerExists: targetPlayer.
-	aPlayer = self currentPlayer
-		ifTrue: [ firstCardFound := (playerHands at: aPlayer) detect: [ :card | card class = Overload ] ifNone: [ AssertionFailure signal: 'The player does not possess an Overload card' ].
+	 firstCardFound := (playerHands at: aPlayer)
+				detect: [ :card | card class = Overload ]
+				ifNone: [ AssertionFailure signal: 'The player does not possess an Overload card' ].
+			firstCardFound isPlayableBy: aPlayer in: self.
 			firstCardFound activateCardEffectFor: targetPlayer in: self.
 			lastCardActivated := firstCardFound.
-			(playerHands at: aPlayer) remove: firstCardFound ]
-		ifFalse: [ AssertionFailure signal: 'Permanent Cards can only be played in the player´s turn' ]
+			(playerHands at: aPlayer) remove: firstCardFound 
+		
 ]
 
 { #category : #actions }
@@ -226,12 +230,14 @@ Game >> playSpeedFromPlayer: aPlayer toPlayer: targetPlayer [
 	stateOfGame cardIsPlayed.
 	self assertPlayerExists: aPlayer.
 	self assertPlayerExists: targetPlayer.
-	aPlayer = self currentPlayer
-		ifTrue: [ firstCardFound := (playerHands at: aPlayer) detect: [ :card | card class = Speed ] ifNone: [ AssertionFailure signal: 'The player does not possess an Speed card' ].
+	firstCardFound := (playerHands at: aPlayer)
+				detect: [ :card | card class = Speed ]
+				ifNone: [ AssertionFailure signal: 'The player does not possess an Speed card' ].
+			firstCardFound isPlayableBy: aPlayer in: self.
 			firstCardFound activateCardEffectFor: targetPlayer in: self.
 			lastCardActivated := firstCardFound.
-			(playerHands at: aPlayer) remove: firstCardFound ]
-		ifFalse: [ AssertionFailure signal: 'Permanent Cards can only be played in the player´s turn' ]
+			(playerHands at: aPlayer) remove: firstCardFound 
+		
 ]
 
 { #category : #accessing }
