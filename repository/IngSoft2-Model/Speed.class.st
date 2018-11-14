@@ -4,14 +4,13 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 Speed >> activateCardEffectFor: aPlayer in: aGame [
-	aGame assertPlayerExists: aPlayer.
+
 	aGame addPermanentCard: self to: aPlayer
-	
 ]
 
-{ #category : #'as yet unclassified' }
-Speed >> outcome [
+{ #category : #actions }
+Speed >> tilesToMove [
 ^1
 ]

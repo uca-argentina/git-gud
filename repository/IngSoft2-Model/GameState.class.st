@@ -4,6 +4,11 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
+{ #category : #'as yet unclassified' }
+GameState >> cardIsPlayed [
+	self subclassResponsibility 
+]
+
 { #category : #testing }
 GameState >> hasEnded [
 self subclassResponsibility 

@@ -4,6 +4,11 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
+{ #category : #'as yet unclassified' }
+GamePlaying >> cardIsPlayed [
+	
+]
+
 { #category : #testing }
 GamePlaying >> hasEnded [
 ^false.

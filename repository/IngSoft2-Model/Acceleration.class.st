@@ -4,12 +4,12 @@ Class {
 	#category : #'IngSoft2-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 Acceleration >> activateCardEffectFor: aPlayer in: aGame [
 	aGame players do: [ :player | aGame addPermanentCard: self to: player ]
 ]
 
-{ #category : #'as yet unclassified' }
-Acceleration >> outcome [
+{ #category : #actions }
+Acceleration >> tilesToMove [
 	^ 1.
 ]
