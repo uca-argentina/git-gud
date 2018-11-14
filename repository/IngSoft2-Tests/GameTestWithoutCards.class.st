@@ -17,7 +17,7 @@ GameTestWithoutCards >> createTilesAtomicBombNormalTile [
 	^ tiles
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'extract methods' }
 GameTestWithoutCards >> createTilesDrawACardTile [
 		|  tiles drawACard |
 	drawACard := DrawACard  new.

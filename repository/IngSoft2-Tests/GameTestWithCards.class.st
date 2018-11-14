@@ -15,23 +15,6 @@ GameTestWithCards >> createAccelerationCardsGenerator [
 ]
 
 { #category : #'extract methods' }
-GameTestWithCards >> createOverloadCancellationCardsGenerator [
-	
-	
-	
-	
-| deck overload1 overload2 overload3 cancellation1 cancellation2 cancellation3 |
-	deck := OrderedCollection new.
-	deck add: (overload1 := Overload new).
-	deck add: (cancellation1 := Cancellation new).
-	deck add: (overload2 := Overload new).
-	deck add: (cancellation2 := Cancellation new).
-	deck add: (overload3 := Overload new).
-	deck add: (cancellation3 := Cancellation new).
-	DeterministicDeck withFutureCards: deck.
-]
-
-{ #category : #'extract methods' }
 GameTestWithCards >> createOverloadCardsGenerator [
 	| deck overload aCardGenerator |
 	overload := Overload new.
@@ -39,19 +22,6 @@ GameTestWithCards >> createOverloadCardsGenerator [
 	(1 to: 10) do: [ :each | deck add: overload ].
 	aCardGenerator := DeterministicDeck withFutureCards: deck.
 	^ aCardGenerator
-]
-
-{ #category : #'extract methods' }
-GameTestWithCards >> createOverloadRedoCardsGenerator [
-	| deck overload1 overload2 overload3 redo1 redo2 redo3 |
-	deck := OrderedCollection new.
-	deck add: (overload1 := Overload new).
-	deck add: (redo1 := Redo new).
-	deck add: (overload2 := Overload new).
-	deck add: (redo2 := Redo new).
-	deck add: (overload3 := Overload new).
-	deck add: (redo3 := Redo new).
-	DeterministicDeck withFutureCards: deck
 ]
 
 { #category : #'extract methods' }
