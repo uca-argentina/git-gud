@@ -57,7 +57,7 @@ GameTestWithCards >> testAccelerationCardAffectsTurnOfPlayer [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createAccelerationCardsGenerator
+		usingDeck: self createAccelerationCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -97,7 +97,7 @@ GameTestWithCards >> testAccelerationCardIsCancelled [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -129,7 +129,7 @@ GameTestWithCards >> testAccelerationCardIsRedone [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -155,7 +155,7 @@ GameTestWithCards >> testAccelerationCardIsRemovedFromHand [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createAccelerationCardsGenerator
+		usingDeck: self createAccelerationCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -184,7 +184,7 @@ GameTestWithCards >> testCancellationCardIsRedone [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -220,7 +220,7 @@ GameTestWithCards >> testCancellationWithNoCardsActivated [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -246,7 +246,7 @@ GameTestWithCards >> testCardsAreNotPlayableAfterGameEnds [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: GameTestWithCards new createOverloadCardsGenerator
+		usingDeck: GameTestWithCards new createOverloadCardsGenerator
 		withNumberOfLaps: 2.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -297,7 +297,7 @@ GameTestWithCards >> testGameWithCardsIsCreated [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createOverloadCardsGenerator
+		usingDeck: self createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded
 ]
@@ -315,7 +315,7 @@ GameTestWithCards >> testGameWithRandomCardsIsCreated [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: RandomDeck new
+		usingDeck: RandomDeck new
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: ((game handOf: john) allSatisfy: [ :card | Card allSubclasses includes: card class ])
@@ -334,7 +334,7 @@ GameTestWithCards >> testOverloadCardAffectsTurnOfPlayer [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createOverloadCardsGenerator
+		usingDeck: self createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -374,7 +374,7 @@ GameTestWithCards >> testOverloadCardIsCancelled [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -407,7 +407,7 @@ GameTestWithCards >> testOverloadCardIsRedone [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -433,7 +433,7 @@ GameTestWithCards >> testOverloadCardIsRemovedFromHand [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createOverloadCardsGenerator
+		usingDeck: self createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -456,7 +456,7 @@ GameTestWithCards >> testPermanentCardInOtherPlayerTurn [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createAccelerationCardsGenerator
+		usingDeck: self createAccelerationCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -483,7 +483,7 @@ GameTestWithCards >> testPlayerDrawsCardFromTile [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createAccelerationCardsGenerator
+		usingDeck: self createAccelerationCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -508,7 +508,7 @@ GameTestWithCards >> testPlayerPlaysCardHeDoesNotHave [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createOverloadCardsGenerator
+		usingDeck: self createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -536,7 +536,7 @@ GameTestWithCards >> testPlayerPlaysOverloadCardHeDoesNotHave [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createOverloadCardsGenerator
+		usingDeck: self createOverloadCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -571,7 +571,7 @@ GameTestWithCards >> testRedoCardWithNoCardsActivated [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -606,7 +606,7 @@ GameTestWithCards >> testRepeatCardIsRedone [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -642,7 +642,7 @@ GameTestWithCards >> testRepeatCardIsUsed [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createRepeatCardsGenerator
+		usingDeck: self createRepeatCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -678,7 +678,7 @@ GameTestWithCards >> testRepeatCardWithNoTilesActivated [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -706,7 +706,7 @@ GameTestWithCards >> testSpeedCardAffectsTurnOfPlayer [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createSpeedCardsGenerator
+		usingDeck: self createSpeedCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game positionOf: john) equals: 1.
@@ -746,7 +746,7 @@ GameTestWithCards >> testSpeedCardIsCancelled [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -779,7 +779,7 @@ GameTestWithCards >> testSpeedCardIsRedone [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: (DeterministicDeck withFutureCards: deck)
+		usingDeck: (DeterministicDeck withFutureCards: deck)
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
@@ -805,7 +805,7 @@ GameTestWithCards >> testSpeedCardIsRemovedFromHand [
 		playedBy: players
 		throwing: dices
 		onABoard: board
-		withCardGenerator: self createSpeedCardsGenerator
+		usingDeck: self createSpeedCardsGenerator
 		withNumberOfLaps: 3.
 	self deny: game hasEnded.
 	self assert: (game handSizeOf: john) equals: 2.
